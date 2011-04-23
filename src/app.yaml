@@ -1,0 +1,28 @@
+application: trafficcam-fetcher
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /fetchPics
+  script: fetch.py
+  login: admin
+
+- url: /serve_single_pic/(.*)
+  script: serve.py
+
+- url: /serve_all_pics
+  script: serve.py
+  login: admin
+  
+- url: /image/(.*)
+  script: serve.py
+  login: admin
+
+- url: /init
+  script: init_ds.py
+  login: admin
+
+- url: /*
+  script: main.py
+ 

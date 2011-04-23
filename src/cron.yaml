@@ -1,0 +1,5 @@
+cron:
+- description: fetching traffic pictures every 99m
+  url: /fetchPics
+  schedule: every 99 minutes
+  

@@ -1,0 +1,49 @@
+<html>
+<head><title>Simple DataStore filler page</title></head>
+<style>
+ 
+div { 
+  background-color: #E0F3FF;
+  border-color: #A3A3A3; 
+  border-radius: 5px;
+  border-style: solid;  
+  border-width: 1px;
+  margin: 10px;
+  width: 600px;
+} 
+
+div.cam {
+  background-color: #E3E6E8;
+}
+#form {
+  background-color: #E6F7FF; 
+}
+
+#msg {
+  background-color: #FFDEE0; 
+  border-width: 2px;
+  border-color: #F0003C;  
+} 
+</style> 
+<body>
+<div><b>Lower or uppercase does not matter - everything is transformed to lowercase.</b></div>
+{% if msg %}
+  <div id="msg">
+    {{ msg }}
+  </div>
+{% endif %}
+
+<form method="POST">
+  <div id="form">
+    Cam: <textarea name="cam_name" rows="1" cols="60"></textarea><br>
+    Link: <textarea name="link" rows="1" cols="60"></textarea><br>
+    <input type="submit" value="Enter data">
+  </div>
+</form>
+
+{% for cam in webcam %}
+  <div class="cam">
+    Cam: {{ cam.name }}<br>
+    url: <a href="{{cam.image_url }}" target="blank">{{cam.image_url}}</a>
+  </div>
+{% endfor %}
