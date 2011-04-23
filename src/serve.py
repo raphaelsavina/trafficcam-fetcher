@@ -35,7 +35,9 @@ class ServeAllPics(webapp.RequestHandler):
     # the key
     pic_blobs = [{"blob":i.blob.key(),
                   "webcam":i.webcam,
-                  "timestamp": i.timestamp,"size": i.blob.size} for i in results]
+                  "timestamp": i.timestamp,
+                   "size": i.blob.size} for i in results]
+#size could be used in fetch to place in blob only new image, compare size to previous, ignore if same?
 
     template_values = {
         "images": pic_blobs
