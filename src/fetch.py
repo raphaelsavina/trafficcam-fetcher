@@ -1,10 +1,9 @@
 """Regularly fetch all pictures from remote location and store in the datastore."""
-
+from __future__ import with_statement
 from google.appengine.api import urlfetch, files
 from google.appengine.ext import blobstore, webapp, db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from model import Webcam, WebcamImage
-from __future__ import with_statement
 import logging
 
 
@@ -22,8 +21,8 @@ class FetchPage(webapp.RequestHandler):
         image_data = fetch_response.content
         image_blob = files.blobstore.create(mime_type='image/jpeg')
 
-				with files.open(image_blob, "a"):
-					f.write(image_date)
+        with files.open(image_blob, "a") as f:
+		f.write(image_data)
         files.finalize(image_blob)
 
         im = WebcamImage()
