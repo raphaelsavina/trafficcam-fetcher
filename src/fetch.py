@@ -22,7 +22,7 @@ class FetchPage(webapp.RequestHandler):
         image_data = fetch_response.content
         image_blob = files.blobstore.create(mime_type='image/jpeg')
 
-				with files.open(image_blob, "a")
+				with files.open(image_blob, "a"):
 					f.write(image_date)
         files.finalize(image_blob)
 
