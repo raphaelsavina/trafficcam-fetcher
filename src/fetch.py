@@ -4,6 +4,7 @@ from google.appengine.api import urlfetch, files
 from google.appengine.ext import blobstore, webapp, db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from model import Webcam, WebcamImage
+from __future__ import with_statement
 import logging
 
 
@@ -20,9 +21,9 @@ class FetchPage(webapp.RequestHandler):
         fetch_response = urlfetch.fetch(cam.image_url)
         image_data = fetch_response.content
         image_blob = files.blobstore.create(mime_type='image/jpeg')
-				
-				f = files.open(image_blob, "a")
-				f.write(image_data)
+
+				with files.open(image_blob, "a")
+					f.write(image_date)
         files.finalize(image_blob)
 
         im = WebcamImage()
