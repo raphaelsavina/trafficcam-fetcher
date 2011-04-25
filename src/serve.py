@@ -1,6 +1,4 @@
 """Serve images from the blobstore.
-
-@author: joswigjn
 """
 from google.appengine.ext import webapp, blobstore
 from google.appengine.ext.webapp import blobstore_handlers, template

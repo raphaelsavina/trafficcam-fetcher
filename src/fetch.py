@@ -20,9 +20,9 @@ class FetchPage(webapp.RequestHandler):
         fetch_response = urlfetch.fetch(cam.image_url)
         image_data = fetch_response.content
         image_blob = files.blobstore.create(mime_type='image/jpeg')
-
-        with files.open(image_blob, 'a') as f:
-          f.write(image_data)
+				
+				f = files.open(image_blob, "a")
+				f.write(image_data)
         files.finalize(image_blob)
 
         im = WebcamImage()
