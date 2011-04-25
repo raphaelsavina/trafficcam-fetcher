@@ -1,5 +1,5 @@
 cron:
-- description: fetching traffic pictures every 99m
+- description: fetching traffic pictures every 16m
   url: /fetchPics
-  schedule: every 99 minutes
+  schedule: every 16 minutes
   
