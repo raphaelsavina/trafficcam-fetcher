@@ -31,8 +31,9 @@ class ServeAllPics(webapp.RequestHandler):
     results = im.fetch(1000)
     # rewrite the values - blob is a BlobReferenceProperty, but we need to pass
     # the key
-    pic_blobs = [{"blob":i.blob.key(),
-                  "webcam":i.webcam,
+    pic_blobs = [{"blob": i.blob.key(),
+                  "webcam": i.webcam,
+                  "size": i.blob.size,
                   "timestamp": i.timestamp}
                    for i in results]
                    #"size": i.blob.size 

@@ -20,4 +20,9 @@ indexes:
   properties:
   - name: webcam
   - name: timestamp
+
+- kind: WebcamImage
+  properties:
+  - name: webcam
+  - name: timestamp
     direction: desc

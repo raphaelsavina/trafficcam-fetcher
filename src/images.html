@@ -1,5 +1,8 @@
 <html>
 <head><title>Stored images</title></head>
 <body>
-{% for i in images %}<img src="image/{{i.blob}}"/> <!--{{i.webcam}}-->
+{% for i in images %}<img src="image/{{i.blob}}"/><br>
+Title: {{i.webcam}}<br>
+Size: {{i.size}} and date: {{i.timestamp}} and Key {{i.blob}}<br>
+<hr>
 {% endfor %}</body>
