@@ -32,7 +32,8 @@ class FetchPage(webapp.RequestHandler):
         blob_info = blobstore.BlobInfo.get(im.blob.key())
 #        self.response.out.write("Fetching for webcam %s %s <br>" % (blob_info.size, im.blob.key()))
 #        self.response.out.write("Success!\n")
-#       Getting the previously saved IMG to check size
+#       Getting (ALL?) the previously saved IMG to check size
+#       but really we should make sure to maniputale only last saved
         q_images = WebcamImage.all()
         q_images.filter("webcam =", cam.name)
         q_images.order("-timestamp")
@@ -41,9 +42,10 @@ class FetchPage(webapp.RequestHandler):
         q_blob_info = blobstore.BlobInfo.get(q_results[pic_index].blob.key())
 #        self.response.out.write("Size previsously saved: %s %s <br>" % (q_blob_info.size, q_blob_info.key()))
         if q_blob_info.size == blob_info.size:
+#          This delete is now working...
            im.delete()
-#          This delete is not working...
-           logging.info("Fetch: same size as previous => blob deleted")
+#       Just one entry into Log for info.
+           logging.info("Fetch: same size as previous => blob for %s deleted" % cam.name)
       except Exception, e:
 #        self.response.out.write("<p>Error encountered - please check the logs")
         logging.error("Error fetching data: %s" % e)
