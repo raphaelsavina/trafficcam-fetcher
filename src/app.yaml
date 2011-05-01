@@ -3,6 +3,9 @@ version: 1
 runtime: python
 api_version: 1
 
+builtins:
+- datastore_admin: on
+
 handlers:
 - url: /fetchPics
   script: fetch.py
@@ -21,6 +24,10 @@ handlers:
 
 - url: /init
   script: init_ds.py
+  login: admin
+
+- url: /cleanup
+  script: cleanup.py
   login: admin
 
 - url: /*
