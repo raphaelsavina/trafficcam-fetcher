@@ -25,8 +25,8 @@ class CleanUp(webapp.RequestHandler):
 		# iterate over query to delete all the old stuff
     for l in d_images:
       logging.info("Query time is %s. will delete one image from saved at %s" % (query_time, l.timestamp))
-			del_blob = BlobInfo.get(l.blob().key())
-			del_blob.delete()
+      del_blob = BlobInfo.get(l.blob().key())
+      del_blob.delete()
       l.delete()
 
   def post(self):
