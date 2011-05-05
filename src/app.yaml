@@ -8,8 +8,8 @@ builtins:
 
 handlers:
 - url: /robots.txt
-	static_files: robots.txt
-	upload: robots.txt
+  static_files: robots.txt
+  upload: robots.txt
 
 - url: /fetchPics
   script: fetch.py
