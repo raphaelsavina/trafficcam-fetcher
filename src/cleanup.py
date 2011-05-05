@@ -18,7 +18,7 @@ class CleanUp(webapp.RequestHandler):
     logging.info("Cleanup process")
 #   Built GQL
     time_now = datetime.datetime.now()
-    query_time = time_now - datetime.timedelta(days=5)
+    query_time = time_now - datetime.timedelta(days=3)
     d_images = WebcamImage.all()
     d_images.filter("timestamp <", query_time)
     d_images.order("timestamp")
