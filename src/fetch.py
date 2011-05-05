@@ -42,8 +42,10 @@ class FetchPage(webapp.RequestHandler):
         q_blob_info = blobstore.BlobInfo.get(q_results[pic_index].blob.key())
 #        self.response.out.write("Size previsously saved: %s %s <br>" % (q_blob_info.size, q_blob_info.key()))
         if q_blob_info.size == blob_info.size:
-#          This delete is now working...
+#          Delete entry from WebcamImage
            im.delete()
+#          Delete the image from blobstore
+           im.blob.delete()
 #       Just one entry into Log for info.
            logging.info("Fetch: same size as previous => blob for %s deleted" % cam.name)
       except Exception, e:
