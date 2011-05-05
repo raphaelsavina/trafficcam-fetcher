@@ -7,6 +7,10 @@ builtins:
 - datastore_admin: on
 
 handlers:
+- url: /robots.txt
+	static_files: robots.txt
+	upload: robots.txt
+
 - url: /fetchPics
   script: fetch.py
   login: admin

@@ -28,7 +28,8 @@ class ServeAllPics(webapp.RequestHandler):
     im = WebcamImage.all()
     im.order("-timestamp")
     im.order("webcam")
-    results = im.fetch(1000)
+		# limiting pictures to 25 - otherwise we may run out of CPU quota
+    results = im.fetch(25)
     # rewrite the values - blob is a BlobReferenceProperty, but we need to pass
     # the key
     pic_blobs = [{"blob": i.blob.key(),
