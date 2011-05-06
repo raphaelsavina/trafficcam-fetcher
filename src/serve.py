@@ -76,8 +76,8 @@ class ServeSinglePic(blobstore_handlers.BlobstoreDownloadHandler):
 
     q_results = q_images.fetch(limit=1, offset=pic_index)
     # len(q_results) should never be greater than pic_index, but just in case
-    if len(q_results) >= pic_index + 1:
-      self.send_blob(blobstore.BlobInfo.get(q_results[pic_index].blob.key()))
+    if len(q_results) != 0:
+      self.send_blob(blobstore.BlobInfo.get(q_results[0].blob.key()))
     else:
       logging.warn("Query for single picture returned no results:\n%s"
                    % q_images)

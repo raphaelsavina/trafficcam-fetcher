@@ -11,6 +11,10 @@ handlers:
   static_files: robots.txt
   upload: robots.txt
 
+- url: /cleanUp
+  script: cleanup.py
+  login: admin
+
 - url: /fetchPics
   script: fetch.py
   login: admin
