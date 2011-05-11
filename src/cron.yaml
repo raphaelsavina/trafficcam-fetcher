@@ -3,6 +3,6 @@ cron:
   url: /fetchPics
   schedule: every 16 minutes
 - description: clean up 4 days old images every 4 hours
-  url: /cleanup
-  schedule: every 4 hours
+  url: /cleanUp
+  schedule: every 15 minutes
   
