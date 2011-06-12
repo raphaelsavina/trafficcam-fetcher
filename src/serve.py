@@ -117,6 +117,8 @@ application = webapp.WSGIApplication([(r"/serve_all_pics*", ServeAllPics),
                                       (r"/image/(.*)", ServeImage),
                                       (r"/serve_single_pic/(.*)/(\d*)$",
                                        ServeSinglePic),
+                                      (r"/serve_single_pic_GTUG_100/(.*)/(\d*)$",
+                                       ServeSinglePic),
                                       (".*", CatchAll), ],
                                       debug=True)
 
