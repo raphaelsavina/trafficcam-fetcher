@@ -29,7 +29,10 @@ class InitPage(webapp.RequestHandler):
     try:
       #TODO: Fix trimming of unicode object
       cname = cgi.escape(self.request.get("cam_name")).lower()
-      clink = "http://www.dublincity.ie/dublintraffic/" + cname + ".jpg"
+      # Cams Dublin City Council 
+      #clink = "http://www.dublincity.ie/dublintraffic/" + cname + ".jpg"
+      # test for cams frSouth Dublin Council 
+      clink = "http://traffic.southdublin.ie/TrafficCamImages/" + cname + "/snap.jpg"
       logging.info("Trying to store webcam data:\n"
                    "cam: %s\n"
                    "link: %s\n" % (cname, clink))
