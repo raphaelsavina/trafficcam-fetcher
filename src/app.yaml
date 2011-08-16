@@ -19,6 +19,10 @@ handlers:
   script: fetch.py
   login: admin
 
+- url: /fetchQ
+  script: fetch.py
+  login: admin
+
 - url: /serve_single_pic/(.*)
   script: serve.py
 
