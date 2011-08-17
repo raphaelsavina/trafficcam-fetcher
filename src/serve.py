@@ -26,6 +26,7 @@ class ServeAllPics(webapp.RequestHandler):
   def get(self):
     logging.info("Serving all pictures...")
     im = WebcamImage.all()
+    im.order("webcam")
     im.order("-timestamp")
 		# limiting pictures to 25 - otherwise we may run out of CPU quota
     results = im.fetch(25)
