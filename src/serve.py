@@ -66,7 +66,7 @@ class ServeSinglePic(blobstore_handlers.BlobstoreDownloadHandler):
     if name == "" or pic_index == "":
       logging.warn("Encountered call for single picture with no params")
       return None
-    logging.info("Serving a single picture:\n")
+    logging.info("Serving a single picture:")
 
     q_images = WebcamImage.all()
     q_images.filter("webcam =", name.lower())
@@ -86,7 +86,7 @@ class ServeSinglePic(blobstore_handlers.BlobstoreDownloadHandler):
     if name == "" or pic_index == "":
       logging.warn("Encountered call for single picture with no params")
       return None
-    logging.info("Serving a single picture:\n")
+    logging.info("Serving a single picture:")
 
     q_images = WebcamImage.all()
     q_images.filter("webcam =", name.lower())
@@ -98,7 +98,7 @@ class ServeSinglePic(blobstore_handlers.BlobstoreDownloadHandler):
     if len(q_results) >= pic_index + 1:
       self.send_blob(blobstore.BlobInfo.get(q_results[pic_index].blob.key()))
     else:
-      logging.warn("Query for single picture returned no results:\n%s"
+      logging.warn("Query for single picture returned no results: %s"
                    % q_images)
       return None
 

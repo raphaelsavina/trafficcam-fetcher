@@ -35,7 +35,7 @@ class AdminPage(webapp.RequestHandler):
 				im.filter("webcam =", j.name.lower())
 				im.order("webcam")
 				im.order("-timestamp")
-				results = im.fetch(5)
+				results = im.fetch(2)
 				for i in results:
 					try: 
 						pic_blobs = pic_blobs + [{"blob": i.blob.key(),"webcam": i.webcam,"size": i.blob.size,"timestamp": i.timestamp, "count" : counti}]
