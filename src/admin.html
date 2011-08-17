@@ -1,27 +1,22 @@
 <html>
 <head><title>Admin Page</title>
 <style>
-
 body { 
 	background-color: #000000;
 	color: #FFFFFF;
 	font: 14px sans-serif;
 } 
-
 .block{
 	font: 11px monospace;
 }
-
 a:link, a:visited {
 	color: #7777FF;
 	text-decoration:none;
 }
-
 a:hover, a:active {
 	color: #FFFFFF;
 	text-decoration:underline;
 }
-
 </style>
 </head>
 <body>
@@ -37,9 +32,7 @@ Individual images (only last 5):
 <div class="block">
 {% for count in images %}
 	{% if not forloop.first %}
-	{% ifequal count.count 0 %}
-	<br>
-	{% endifequal %}
+		{% ifequal count.count 0 %}<br>{% endifequal %}
 	{% endif %}
 	<a class="block" href="../serve_single_pic/{{count.webcam}}/{{count.count}}" target="_blank">{{count.webcam}}/{{count.count}}</a>-
 {% endfor %}

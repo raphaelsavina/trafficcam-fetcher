@@ -30,8 +30,8 @@ class FetchPage(webapp.RequestHandler):
         im.blob = files.blobstore.get_blob_key(image_blob)
         im.put()
         blob_info = blobstore.BlobInfo.get(im.blob.key())
-#       self.response.out.write("Fetching for webcam %s %s <br>" % (blob_info.size, im.blob.key()))
-#       self.response.out.write("Success!\n")
+        logging.error("Fetching for webcam %s %s <br>" % (blob_info.size, im.blob.key()))
+        logging.error("Success!\n")
 #       Getting (ALL?) the previously saved IMG to check size
 #       but really we should make sure to maniputale only last saved
         q_images = WebcamImage.all()
