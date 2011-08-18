@@ -13,10 +13,10 @@ class FetchPage(webapp.RequestHandler):
   def get(self):
 	"""Simple get request handler."""
 	self.response.headers["Content-Type"] = "text/html"
-	self.response.out.write("<p>Starting fetch op")
+	self.response.out.write("<p>Sending fetch operation to Task Queues, one image at a time...</p>")
 	logging.info("Cron job started")
 	webcams = Webcam.all()
-	webcams.order("-name")
+	webcams.order("name")
 	for cam in webcams:
 		try:
 			check_size = urllib.urlopen(cam.image_url).read()
@@ -26,9 +26,14 @@ class FetchPage(webapp.RequestHandler):
 			q_images.order("-timestamp")
 			pic_index = 0
 			q_results = q_images.fetch(1)
-			q_blob_info = blobstore.BlobInfo.get(q_results[pic_index].blob.key())
-			# logging.info("Size New %s - Size Old %s" % (image_size, q_blob_info.size))
-			if q_blob_info.size != image_size:
+			try:
+				q_blob_info = blobstore.BlobInfo.get(q_results[pic_index].blob.key())
+				old_size = q_blob_info.size
+			except:
+				# Just in case this is 1st time an image is checked
+				old_size = 0
+			logging.info("Size New %s - Size Old %s" % (image_size, old_size))
+			if old_size != image_size:
 				taskqueue.add(queue_name='fetching', url='/fetchQ', params={'cam': cam.name,'url': cam.image_url})
 		except Exception, e:
 			logging.error("Error fetching data: %s" % e)
@@ -45,7 +50,7 @@ class FetchQ(webapp.RequestHandler):
 		image_data = fetch_response.content
 		with files.open(image_blob, "a") as f:
 			f.write(image_data)
-			# logging.info("Write Image")
+			logging.info("Write Image")
 		files.finalize(image_blob)
 		im = WebcamImage()
 		im.webcam = cam
