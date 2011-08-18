@@ -13,19 +13,13 @@ import urllib
 class CleanUp(webapp.RequestHandler):
   def get(self):
     """Simple get request handler."""
-#   self.response.headers["Content-Type"] = "text/html"
-#   self.response.out.write("Cleanup of old images<br>")
     logging.info("Cleanup process")
-#   Built GQL
     time_now = datetime.datetime.now()
-    query_time = time_now - datetime.timedelta(days=4)
+    query_time = time_now - datetime.timedelta(days=3)
     d_images = WebcamImage.all()
     d_images.filter("timestamp <", query_time)
     d_images.order("timestamp")
-    # iterate over query to delete all the old stuff
     for l in d_images:
-      logging.info("Query time is %s. Will delete one image from saved at %s" % (query_time, l.timestamp))
-      # logging.info("Blobkey is %s." % l.blob.key())
       del_blob = blobstore.BlobInfo.get(l.blob.key())
       if del_blob:
         del_blob.delete()
