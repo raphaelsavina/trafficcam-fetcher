@@ -15,6 +15,10 @@ handlers:
   script: cleanup.py
   login: admin
 
+- url: /cleanQ
+  script: cleanup.py
+  login: admin
+
 - url: /fetchPics
   script: fetch.py
   login: admin

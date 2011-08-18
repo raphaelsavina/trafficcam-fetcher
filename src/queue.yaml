@@ -3,4 +3,7 @@ total_storage_limit: 20M
 queue:
 - name: fetching
   rate: 6/s
+
+- name: cleaning
+  rate: 1/s
   
