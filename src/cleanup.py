@@ -13,7 +13,6 @@ import urllib
 class CleanUp(webapp.RequestHandler):
 	def get(self):
 		"""Simple get request handler."""
-		time_now = datetime.datetime.now()
 		taskqueue.add(queue_name='cleaning', url='/cleanQ')
 	def post(self):
 		"""Simple post request handler."""
@@ -23,8 +22,8 @@ class CleanQ(webapp.RequestHandler):
 	def post(self):
 		"""Simple get request handler."""
 		time_now = datetime.datetime.now()
-		query_time = time_now - datetime.timedelta(days=3)
-		logging.info("Cleanup process between %s and %s" % (time_now, query_time))
+		query_time = time_now - datetime.timedelta(hours=50)
+		# logging.info("Cleanup process between %s and %s" % (time_now, query_time))
 		d_images = WebcamImage.all()
 		d_images.filter("timestamp <", query_time)
 		d_images.order("timestamp")
@@ -32,7 +31,7 @@ class CleanQ(webapp.RequestHandler):
 			del_blob = blobstore.BlobInfo.get(l.blob.key())
 			if del_blob:
 				del_blob.delete()
-				logging.info("From %s - Delete %s/n" % (query_time, l.timestamp))
+				# logging.info("From %s - Delete %s/n" % (query_time, l.timestamp))
 			l.delete()
 	def get(self):
 		"""Simple post request handler."""
