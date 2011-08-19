@@ -26,7 +26,7 @@ class AdminPage(webapp.RequestHandler):
 	def get(self):
 		cam = Webcam.all()
 		cam.order("-name")
-		listcams = cam.fetch(300)	    
+		listcams = cam.fetch(200)	    
 		counti = 0
 		pic_blobs = []
 		for j in listcams:
@@ -35,7 +35,7 @@ class AdminPage(webapp.RequestHandler):
 				im.filter("webcam =", j.name.lower())
 				im.order("webcam")
 				im.order("-timestamp")
-				results = im.fetch(20)
+				results = im.fetch(3)
 				for i in results:
 					try: 
 						pic_blobs = pic_blobs + [{"blob": i.blob.key(),"webcam": i.webcam,"size": i.blob.size,"timestamp": i.timestamp, "count" : counti}]
@@ -59,7 +59,7 @@ class AdminPage(webapp.RequestHandler):
 		"""Simple post request handler."""
 	pass
 
-application = webapp.WSGIApplication([("/", MainPage),("/admin", AdminPage) ],
+application = webapp.WSGIApplication([("/", MainPage),("/adminpage", AdminPage) ],
                                      debug=False)
 
 def main():
