@@ -1,6 +1,6 @@
 """Regularly fetch all pictures from remote location and store in the datastore."""
 from __future__ import with_statement
-from google.appengine.api import urlfetch, files, taskqueue
+from google.appengine.api import urlfetch, files, taskqueue, memcache
 from google.appengine.ext import blobstore, webapp, db
 from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -16,9 +16,15 @@ class FetchPage(webapp.RequestHandler):
 	self.response.out.write("<p>Sending fetch operation to Task Queues, one image at a time...</p>")
 	logging.info("Cron job started")
 	webcams = Webcam.all()
-	webcams.order("name")
+	webcams.order("-name")
+	last_cursor = memcache.get("cursor")
+	stat = memcache.get_stats()
+	if last_cursor:
+	    webcams.with_cursor(start_cursor=last_cursor)
 	for cam in webcams:
 		try:
+			cursor = webcams.cursor()
+			memcache.set('cursor', cursor, time=10)
 			check_size = urllib.urlopen(cam.image_url).read()
 			image_size = len(check_size)
 			q_images = WebcamImage.all()
@@ -33,10 +39,11 @@ class FetchPage(webapp.RequestHandler):
 			except:
 				old_size = 0
 			if old_size != image_size:
-				logging.info("Cam: %s Size New %s != Size Old %s" % (cam.name, image_size, old_size))
+				# logging.info("Cam: %s Size New %s != Size Old %s" % (cam.name, image_size, old_size))
 				taskqueue.add(queue_name='fetching', url='/fetchQ', params={'cam': cam.name,'url': cam.image_url})
 		except Exception, e:
 			logging.error("Error fetching data: %s" % e)
+			self.redirect("/fetchPics")
   def post(self):
     """Simple post request handler."""
     pass
