@@ -26,7 +26,7 @@ class AdminPage(webapp.RequestHandler):
 	def get(self):
 		cam = Webcam.all()
 		cam.order("-name")
-		listcams = cam.fetch(200)	    
+		listcams = cam.fetch(140)	    
 		counti = 0
 		pic_blobs = []
 		for j in listcams:
