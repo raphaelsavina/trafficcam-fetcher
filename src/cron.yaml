@@ -1,10 +1,10 @@
 cron:
 - description: fetching traffic pictures every 10 minutes @ index 0
   url: /fetchPics/0/32
-  schedule: every 10 minutes
+  schedule: every 9 minutes
 - description: fetching traffic pictures every 10 minutes @ index 40
   url: /fetchPics/33/81
-  schedule: every 9 minutes
+  schedule: every 11 minutes
 - description: fetching traffic pictures every 10 minutes @ index 80
   url: /fetchPics/82/121
   schedule: every 10 minutes

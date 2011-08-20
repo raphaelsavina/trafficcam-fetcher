@@ -10,17 +10,19 @@ import os
 import urllib
 
 class FetchPage(webapp.RequestHandler):
-  def get(self, index, offset):
+  def get(self, start, finish):
 	"""Simple get request handler."""
 	self.response.headers["Content-Type"] = "text/html"
 	self.response.out.write("<p>Sending fetch operation to Task Queues, one image at a time...</p>")
 	logging.info("Cron job started")
 	webcams = Webcam.all()
-	webcams.order("-image_url")
-	index = int(index)
-	offset = int(offset)
+	webcams.order("image_url")
+	# We need to fetch from URL between "start" to "finish"
+	# Getting index (number total to fetch)
+	index = int(finish) - int(start)
+	# From where to start the fetching
+	offset = int(start)
 	listcam = webcams.fetch(index, offset)
-	logging.info("Index %s Offset %s" % (index, offset))
 	for cam in listcam:
 		try:
 			check_size = urllib.urlopen(cam.image_url).read()
