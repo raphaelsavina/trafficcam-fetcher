@@ -19,7 +19,7 @@ handlers:
   script: cleanup.py
   login: admin
 
-- url: /fetchPics
+- url: /fetchPics/(.*)/(.*)
   script: fetch.py
   login: admin
   

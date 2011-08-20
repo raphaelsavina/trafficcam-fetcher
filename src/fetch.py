@@ -10,21 +10,19 @@ import os
 import urllib
 
 class FetchPage(webapp.RequestHandler):
-  def get(self):
+  def get(self, index, offset):
 	"""Simple get request handler."""
 	self.response.headers["Content-Type"] = "text/html"
 	self.response.out.write("<p>Sending fetch operation to Task Queues, one image at a time...</p>")
 	logging.info("Cron job started")
 	webcams = Webcam.all()
-	webcams.order("-name")
-	last_cursor = memcache.get("cursor")
-	stat = memcache.get_stats()
-	if last_cursor:
-	    webcams.with_cursor(start_cursor=last_cursor)
-	for cam in webcams:
+	webcams.order("-image_url")
+	index = int(index)
+	offset = int(offset)
+	listcam = webcams.fetch(index, offset)
+	logging.info("Index %s Offset %s" % (index, offset))
+	for cam in listcam:
 		try:
-			cursor = webcams.cursor()
-			memcache.set('cursor', cursor, time=10)
 			check_size = urllib.urlopen(cam.image_url).read()
 			image_size = len(check_size)
 			q_images = WebcamImage.all()
@@ -39,7 +37,7 @@ class FetchPage(webapp.RequestHandler):
 			except:
 				old_size = 0
 			if old_size != image_size:
-				# logging.info("Cam: %s Size New %s != Size Old %s" % (cam.name, image_size, old_size))
+				logging.info("Cam: %s Size New %s != Size Old %s" % (cam.name, image_size, old_size))
 				taskqueue.add(queue_name='fetching', url='/fetchQ', params={'cam': cam.name,'url': cam.image_url})
 		except Exception, e:
 			logging.error("Error fetching data: %s" % e)
@@ -69,7 +67,7 @@ class FetchQ(webapp.RequestHandler):
 		"""Simple get request handler."""
 	pass
 
-application = webapp.WSGIApplication([(r"/fetchPics", FetchPage),
+application = webapp.WSGIApplication([(r"/fetchPics/(\d*)/(\d*)$", FetchPage),
                                       (r"/fetchQ", FetchQ)],
                                      debug=True)
 
