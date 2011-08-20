@@ -31,7 +31,7 @@ class CleanQ(webapp.RequestHandler):
 			del_blob = blobstore.BlobInfo.get(l.blob.key())
 			if del_blob:
 				del_blob.delete()
-				# logging.info("From %s - Delete %s/n" % (query_time, l.timestamp))
+				logging.info("From %s - Delete %s/n" % (query_time, l.timestamp))
 			l.delete()
 	def get(self):
 		"""Simple post request handler."""
