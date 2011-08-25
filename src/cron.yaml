@@ -8,7 +8,7 @@ cron:
 - description: fetching traffic pictures every 10 minutes
   url: /fetchPics/83/127
   schedule: every 10 minutes
-- description: clean up 50 hours old images every 15 minutes
+- description: clean up 48 hours old images every 5 minutes
   url: /cleanUp
-  schedule: every 15 minutes
+  schedule: every 5 minutes
   
