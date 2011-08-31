@@ -34,7 +34,6 @@ class AdminPage(webapp.RequestHandler):
 				im = WebcamImage.all()
 				im.filter("webcam =", j.name.lower())
 				im.order("webcam")
-				im.order("-timestamp")
 				results = im.fetch(3)
 				for i in results:
 					try: 

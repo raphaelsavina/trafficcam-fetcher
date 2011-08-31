@@ -12,17 +12,6 @@ indexes:
 
 - kind: WebcamImage
   properties:
-  - name: timestamp
-    direction: desc
-  - name: webcam
-
-- kind: WebcamImage
-  properties:
-  - name: webcam
-  - name: timestamp
-
-- kind: WebcamImage
-  properties:
   - name: webcam
   - name: timestamp
     direction: desc
