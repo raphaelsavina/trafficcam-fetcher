@@ -22,7 +22,7 @@ class CleanQ(webapp.RequestHandler):
 	def post(self):
 		"""Simple get request handler."""
 		time_now = datetime.datetime.now()
-		query_time = time_now - datetime.timedelta(hours=48)
+		query_time = time_now - datetime.timedelta(hours=10)
 		# logging.info("Cleanup process between %s and %s" % (time_now, query_time))
 		d_images = WebcamImage.all()
 		d_images.filter("timestamp <", query_time)
