@@ -52,6 +52,7 @@ class FetchQ(webapp.RequestHandler):
 	def post(self):
 		cam = self.request.get('cam')
 		image_url = self.request.get('url')
+		logging.info("Cam: %s URL %s" % (cam, image_url))
 		image_blob = files.blobstore.create(mime_type='image/jpeg')
 		fetch_response = urlfetch.fetch(image_url)
 		image_data = fetch_response.content
