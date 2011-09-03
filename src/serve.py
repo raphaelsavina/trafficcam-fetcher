@@ -78,8 +78,10 @@ class ServeSinglePic(blobstore_handlers.BlobstoreDownloadHandler):
     if len(q_results) != 0:
       self.send_blob(blobstore.BlobInfo.get(q_results[0].blob.key()))
     else:
-      logging.warn("Query for single picture returned no results:\n%s"
-                   % q_images)
+      path = os.path.join(os.path.dirname(__file__), "placeholder.jpg")
+      self.response.headers['Content-Type'] = 'image/jpg'
+      self.response.out.write(file(path, "rb").read())
+      logging.warn("Query for picture returned no results, sending placeholder\n")
       return None
 
   def post(self, name, pic_index):
@@ -98,8 +100,10 @@ class ServeSinglePic(blobstore_handlers.BlobstoreDownloadHandler):
     if len(q_results) >= pic_index + 1:
       self.send_blob(blobstore.BlobInfo.get(q_results[pic_index].blob.key()))
     else:
-      logging.warn("Query for single picture returned no results: %s"
-                   % q_images)
+      path = os.path.join(os.path.dirname(__file__), "placeholder.jpg")
+      self.response.headers['Content-Type'] = 'image/jpg'
+      self.response.out.write(file(path, "rb").read())
+      logging.warn("Query for picture returned no results, sending placeholder\n")
       return None
 
 class CatchAll(webapp.RequestHandler):
