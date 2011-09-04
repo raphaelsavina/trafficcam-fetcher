@@ -13,6 +13,7 @@ class FetchPage(webapp.RequestHandler):
   def get(self, start, finish):
 	"""Simple get request handler."""
 	self.response.headers["Content-Type"] = "text/html"
+	# self.response.out.write("<meta http-equiv=\"refresh\" content=\"60\">")
 	self.response.out.write("<p>Sending fetch operation to Task Queues, one image at a time...</p>")
 	logging.info("Cron job started")
 	webcams = Webcam.all()
