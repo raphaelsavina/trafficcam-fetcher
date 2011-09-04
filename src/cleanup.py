@@ -4,7 +4,7 @@ from google.appengine.api import urlfetch, files, taskqueue
 from google.appengine.ext import blobstore, webapp, db
 from google.appengine.ext.webapp import blobstore_handlers, template
 from google.appengine.ext.webapp.util import run_wsgi_app
-from model import WebcamImage
+from model import WebcamImage, Webcam
 import logging
 import datetime
 import os
@@ -22,17 +22,29 @@ class CleanQ(webapp.RequestHandler):
 	def post(self):
 		"""Simple get request handler."""
 		time_now = datetime.datetime.now()
-		query_time = time_now - datetime.timedelta(hours=10)
-		# logging.info("Cleanup process between %s and %s" % (time_now, query_time))
-		d_images = WebcamImage.all()
-		d_images.filter("timestamp <", query_time)
-		d_images.order("timestamp")
-		for l in d_images:
-			del_blob = blobstore.BlobInfo.get(l.blob.key())
-			if del_blob:
-				del_blob.delete()
-				logging.info("From %s - Delete %s/n" % (query_time, l.timestamp))
-			l.delete()
+		query_time = time_now - datetime.timedelta(hours=12)
+		cam = Webcam.all()
+		cam.order("name")
+		for j in cam:
+			try:
+				d_images = WebcamImage.all()
+				d_images.filter("webcam =", j.name )			
+				d_images.filter("timestamp <", query_time)
+				d_images.order("timestamp")
+				# We need to keep at least 10 images
+				d_count = d_images.count()
+				if d_count > 10:
+					for l in d_images:
+						del_blob = blobstore.BlobInfo.get(l.blob.key())
+						if del_blob:
+							del_blob.delete()
+							logging.info("From %s - Delete %s/ Name:%s " % (query_time, l.timestamp, l.webcam))
+						l.delete()
+						d_count = d_count - 1
+						if d_count == 10:
+							break
+			except Exception, f:
+				logging.error("Error fetching data: %s" % f)
 	def get(self):
 		"""Simple post request handler."""
 		pass
