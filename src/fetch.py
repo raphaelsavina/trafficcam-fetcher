@@ -24,6 +24,7 @@ class FetchPage(webapp.RequestHandler):
 	# From where to start the fetching
 	offset = int(start)
 	listcam = webcams.fetch(index, offset)
+	lcountdown = 0
 	for cam in listcam:
 		try:
 			check_size = urllib.urlopen(cam.image_url).read()
@@ -41,7 +42,8 @@ class FetchPage(webapp.RequestHandler):
 				old_size = 0
 			if old_size != image_size:
 				logging.info("Cam: %s Size New %s != Size Old %s" % (cam.name, image_size, old_size))
-				taskqueue.add(queue_name='fetching', url='/fetchQ', params={'cam': cam.name,'url': cam.image_url})
+				taskqueue.add(queue_name='fetching', url='/fetchQ', params={'cam': cam.name,'url': cam.image_url}, countdown=lcountdown)
+				lcountdown += 2
 		except Exception, e:
 			logging.error("Error fetching data: %s" % e)
 			self.redirect("/fetchPics")
