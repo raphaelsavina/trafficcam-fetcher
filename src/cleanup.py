@@ -1,6 +1,6 @@
 """Regularly remove oldest images from the datastore"""
 from __future__ import with_statement
-from google.appengine.api import urlfetch, files, taskqueue
+from google.appengine.api import urlfetch, files, taskqueue, memcache
 from google.appengine.ext import blobstore, webapp, db
 from google.appengine.ext.webapp import blobstore_handlers, template
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -22,13 +22,25 @@ class CleanQ(webapp.RequestHandler):
 	def post(self):
 		"""Simple get request handler."""
 		time_now = datetime.datetime.now()
-		query_time = time_now - datetime.timedelta(hours=12)
-		cam = Webcam.all()
-		cam.order("name")
-		for j in cam:
+		query_time = time_now - datetime.timedelta(hours=10)
+		# listcam = {"name" : "image_url", "name" : "image_url",...} 
+		cam = memcache.get("listcam")
+ 	 	if cam is not None:
+		 	logging.info("From MEMCACHE %s" % (cam))
+		 	#return cam
+		else:
+			camresults = Webcam.all().fetch(300)
+			cam = {}
+			for a in camresults:
+				cam[a.name] = a.image_url
+	 		logging.info("For Datastore %s" % (cam))
+		 	memcache.set("listcam", cam)
+			#return cam
+		for j in cam.keys():
 			try:
 				d_images = WebcamImage.all()
-				d_images.filter("webcam =", j.name )			
+				d_images.filter("webcam =", j)
+			 	logging.info("webcam Name %s" % (j))			
 				d_images.filter("timestamp <", query_time)
 				d_images.order("timestamp")
 				# We need to keep at least 10 images
@@ -38,7 +50,7 @@ class CleanQ(webapp.RequestHandler):
 						del_blob = blobstore.BlobInfo.get(l.blob.key())
 						if del_blob:
 							del_blob.delete()
-							logging.info("From %s - Delete %s/ Name:%s " % (query_time, l.timestamp, l.webcam))
+							logging.info("Delete %s" % (l.webcam))
 						l.delete()
 						d_count = d_count - 1
 						if d_count == 10:
