@@ -1,5 +1,4 @@
-"""List all the cameras, to replace Datastore
-"""
+"""List all the cameras, to replace Datastore?"""
     # webcam.name, webcam.description, webcam.image_url, webcam.LAT, webcam.LON
     listcam = ('Bawneouge','Nangor Rd/Bawneouge Jtn','http://traffic.southdublin.ie/TrafficCamImages/Bawneouge/snap.jpg','53.3224','-6.409432',
                'BelgardAirton','Belgard Airton','http://traffic.southdublin.ie/TrafficCamImages/BelgardAirton/snap.jpg','53.2929','-6.369188',
@@ -128,3 +127,6 @@
                '034425d2_ff8b1572_cam1','N15 Killygordon','http://www.nratraffic.ie/Camera%20Images/034425d2_ff8b1572_cam1.jpg','54.79777959','-7.662227493',
                '0347de83_ff8eefc6_cam1','N13 Grianan of Aileach','http://www.nratraffic.ie/Camera%20Images/0347de83_ff8eefc6_cam1.jpg','55.04166628','-7.409727867',
                '0347e95c_ff832632_cam1','N56 Gweedore','http://www.nratraffic.ie/Camera%20Images/0347e95c_ff832632_cam1.jpg','55.04444536','-8.182228926')
+
+
+
