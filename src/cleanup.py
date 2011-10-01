@@ -33,7 +33,7 @@ class CleanQ(webapp.RequestHandler):
 			cam = {}
 			for a in camresults:
 				cam[a.name] = a.image_url
-	 		logging.info("From DATASTORE")
+			logging.info("From DATASTORE")
 		 	memcache.set("listcam", cam)
 			#return cam
 		for j in cam.keys():
