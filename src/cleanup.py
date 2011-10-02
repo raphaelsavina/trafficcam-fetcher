@@ -26,10 +26,9 @@ class CleanQ(webapp.RequestHandler):
 		# listcam = {"name" : "image_url", "name" : "image_url",...} 
 		cam = memcache.get("listcam")
  	 	if cam is not None:
-		 	logging.info("From MEMCACHE")
-		 	#return cam
+			logging.info("From MEMCACHE")
 		else:
-			camresults = Webcam.all().fetch(300)
+			camresults = Webcam.all()
 			cam = {}
 			for a in camresults:
 				cam[a.name] = a.image_url
@@ -38,10 +37,7 @@ class CleanQ(webapp.RequestHandler):
 			#return cam
 		for j in cam.keys():
 			try:
-				d_images = WebcamImage.all()
-				d_images.filter("webcam =", j)
-				d_images.filter("timestamp <", query_time)
-				d_images.order("timestamp")
+				d_images = WebcamImage.all().filter("webcam =", j).filter("timestamp <", query_time).order("timestamp")
 				# We need to keep at least 10 images
 				d_count = d_images.count()
 				if d_count > 10:
