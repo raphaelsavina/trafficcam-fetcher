@@ -24,17 +24,14 @@ class MainPage(webapp.RequestHandler):
 
 class AdminPage(webapp.RequestHandler):
 	def get(self):
-		cam = Webcam.all()
-		cam.order("-name")
+		cam = Webcam.all().order("-name")
 		counti = 0
 		pic_blobs = []
 		for j in cam:
 			try:
-				im = WebcamImage.all()
-				im.filter("webcam =", j.name.lower())
-				im.order("webcam")
-				results = im.fetch(4)
-				for i in results:
+				im = WebcamImage.all().filter("webcam =", j.name.lower()).order("webcam")
+				#results = im.fetch(4)
+				for i in im:
 					try: 
 						pic_blobs = pic_blobs + [{"blob": i.blob.key(),"webcam": i.webcam,"size": i.blob.size,"timestamp": i.timestamp, "count" : counti}]
 						counti = counti + 1
@@ -44,11 +41,9 @@ class AdminPage(webapp.RequestHandler):
 			except Exception, f:
 				logging.error("Error fetching data: %s" % f)
 		cam_name = [{"name":j.name}for j in cam]
-
 		template_values = {
 			"images": pic_blobs, "names" : cam_name
 	    }
-
 		path = os.path.join(os.path.dirname(__file__), "admin.html")
 		self.response.out.write(template.render(path, template_values))
 
