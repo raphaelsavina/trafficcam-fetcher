@@ -9,26 +9,13 @@ import logging
 import os
 import urllib
 
-# Hmm, it seems I can only serve a single byte range at once...
-#class ServeAllPics(blobstore_handlers.BlobstoreDownloadHandler):
-#  """Handler class for outputting all pictures in an ordered format for HTML."""
-#  def get(self):
-#    logging.info("Serving all pictures...")
-#    im = WebcamImage.all()
-#    try:
-#      for i in im:
-#        self.send_blob(blobstore.BlobInfo.get(i.blob.key()))
-#    except Exception, e:
-#      logging.error("Error while serving all pictures: %s" % e)
-
 class ServeAllPics(webapp.RequestHandler):
   """Triggers a html page showing multiple images."""
   def get(self):
     logging.info("Serving all pictures...")
-    im = WebcamImage.all()
-    im.order("-timestamp")
-		# limiting pictures to 25 - otherwise we may run out of CPU quota
-    results = im.fetch(25)
+    im = WebcamImage.all().order("-timestamp")
+		# limiting pictures to 15 - otherwise we may run out of CPU quota
+    results = im.fetch(15)
     # rewrite the values - blob is a BlobReferenceProperty, but we need to pass
     # the key
     pic_blobs = [{"blob": i.blob.key(),
@@ -68,9 +55,7 @@ class ServeSinglePic(blobstore_handlers.BlobstoreDownloadHandler):
       return None
     logging.info("Serving a single picture:")
 
-    q_images = WebcamImage.all()
-    q_images.filter("webcam =", name.lower())
-    q_images.order("-timestamp")
+    q_images = WebcamImage.all().filter("webcam =", name.lower()).order("-timestamp")
     pic_index = int(pic_index)
 
     q_results = q_images.fetch(limit=1, offset=pic_index)
@@ -89,12 +74,8 @@ class ServeSinglePic(blobstore_handlers.BlobstoreDownloadHandler):
       logging.warn("Encountered call for single picture with no params")
       return None
     logging.info("Serving a single picture:")
-
-    q_images = WebcamImage.all()
-    q_images.filter("webcam =", name.lower())
-    q_images.order("-timestamp")
+    q_images = WebcamImage.all().filter("webcam =", name.lower()).order("-timestamp")
     pic_index = int(pic_index)
-
     q_results = q_images.fetch(limit=1, offset=pic_index)
     # len(q_results) should never be greater than pic_index, but just in case
     if len(q_results) >= pic_index + 1:
@@ -118,10 +99,8 @@ class CatchAll(webapp.RequestHandler):
 
 application = webapp.WSGIApplication([(r"/serve_all_pics*", ServeAllPics),
                                       (r"/image/(.*)", ServeImage),
-                                      (r"/serve_single_pic/(.*)/(\d*)$",
-                                       ServeSinglePic),
-                                      (r"/serve_single_pic_GTUG_100/(.*)/(\d*)$",
-                                       ServeSinglePic),
+                                      (r"/serve_single_pic/(.*)/(\d*)$",ServeSinglePic),
+                                      (r"/serve_single_pic_GTUG_100/(.*)/(\d*)$", ServeSinglePic),
                                       (".*", CatchAll), ],
                                       debug=True)
 
