@@ -13,25 +13,24 @@ class FetchPage(webapp.RequestHandler):
   def get(self, start, finish):
 	"""Simple get request handler."""
 	self.response.headers["Content-Type"] = "text/html"
-	# self.response.out.write("<meta http-equiv=\"refresh\" content=\"60\">")
-	self.response.out.write("<p>Sending fetch operation to Task Queues, one image at a time...</p>")
 	logging.info("Cron job started")
-	webcams = Webcam.all()
-	webcams.order("image_url")
-	# We need to fetch from URL between "start" to "finish"
-	# Getting index (number total to fetch)
-	index = int(finish) - int(start)
-	# From where to start the fetching
-	offset = int(start)
-	listcam = webcams.fetch(index, offset)
-	lcountdown = 0
-	for cam in listcam:
+
+	# listcam = {"name" : "image_url", "name" : "image_url",...} 
+	cam = memcache.get("listcam")
+ 	if cam is not None:
+		logging.info("From MEMCACHE")
+	else:
+		logging.info("From DATASTORE")
+		camresults = Webcam.all()
+		cam = {}
+		for a in camresults:
+			cam[a.name] = a.image_urls
+	 	memcache.set("listcam", cam)
+	for listcam in cam.keys():
 		try:
-			check_size = urllib.urlopen(cam.image_url).read()
+			check_size = urllib.urlopen(cam[listcam]).read()
 			image_size = len(check_size)
-			q_images = WebcamImage.all()
-			q_images.filter("webcam =", cam.name)
-			q_images.order("-timestamp")
+			q_images = WebcamImage.all().filter("webcam =", listcam).order("-timestamp")
 			pic_index = 0
 			q_results = q_images.fetch(1)
 			# Test just in case this is 1st time an image is checked
@@ -40,10 +39,9 @@ class FetchPage(webapp.RequestHandler):
 				old_size = q_blob_info.size
 			except:
 				old_size = 0
+			logging.info("Old size: %s - New size: %s" % (old_size, image_size))
 			if old_size != image_size:
-				logging.info("Cam: %s Size New %s != Size Old %s" % (cam.name, image_size, old_size))
-				taskqueue.add(queue_name='fetching', url='/fetchQ', params={'cam': cam.name,'url': cam.image_url}, countdown=lcountdown)
-				lcountdown += 2
+				taskqueue.add(queue_name='fetching', url='/fetchQ', params={'cam': listcam,'url': cam[listcam]})
 		except Exception, e:
 			logging.error("Error fetching data: %s" % e)
 			self.redirect("/fetchPics")
@@ -67,7 +65,7 @@ class FetchQ(webapp.RequestHandler):
 		im.webcam = cam
 		im.blob = files.blobstore.get_blob_key(image_blob)
 		im.put()
-		blob_info = blobstore.BlobInfo.get(im.blob.key())
+		# blob_info = blobstore.BlobInfo.get(im.blob.key())
 		logging.info("Fetching for webcam %s" % (cam))
 	def get(self):
 		"""Simple get request handler."""
