@@ -24,7 +24,7 @@ class FetchPage(webapp.RequestHandler):
 		camresults = Webcam.all()
 		cam = {}
 		for a in camresults:
-			cam[a.name] = a.image_urls
+			cam[a.name] = a.image_url
 	 	memcache.set("listcam", cam)
 	for listcam in cam.keys():
 		try:

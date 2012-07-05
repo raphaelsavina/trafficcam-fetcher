@@ -22,7 +22,7 @@ class CleanQ(webapp.RequestHandler):
 	def post(self):
 		"""Simple get request handler."""
 		time_now = datetime.datetime.now()
-		query_time = time_now - datetime.timedelta(hours=10)
+		query_time = time_now - datetime.timedelta(hours=3)
 		# listcam = {"name" : "image_url", "name" : "image_url",...} 
 		cam = memcache.get("listcam")
  	 	if cam is not None:
@@ -40,7 +40,7 @@ class CleanQ(webapp.RequestHandler):
 				d_images = WebcamImage.all().filter("webcam =", j).filter("timestamp <", query_time).order("timestamp")
 				# We need to keep at least 10 images
 				d_count = d_images.count()
-				if d_count > 10:
+				if d_count > 5:
 					for l in d_images:
 						del_blob = blobstore.BlobInfo.get(l.blob.key())
 						if del_blob:
